@@ -1,0 +1,37 @@
+package com.sample.cart.CartDto;
+
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+public class ProductsDto {
+	private int prodId;
+	private String prodName;
+	private String description;
+	private Long custId;
+	
+	public int getProdId() {
+		return prodId;
+	}
+	public void setProdId(int prodId) {
+		this.prodId = prodId;
+	}
+	public String getProdName() {
+		return prodName;
+	}
+	public void setProdName(String prodName) {
+		this.prodName = prodName;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Long getCustId() {
+		return custId;
+	}
+	public void setCustId(Long custId) {
+		this.custId = custId;
+	}
+
+}

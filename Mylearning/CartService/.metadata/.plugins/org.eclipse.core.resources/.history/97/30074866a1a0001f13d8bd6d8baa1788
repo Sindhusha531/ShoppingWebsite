@@ -1,0 +1,8 @@
+package com.sample.cart.Cartservice;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class Cartservice {
+
+}

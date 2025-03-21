@@ -1,0 +1,5 @@
+package com.sample.cart.CartRepository;
+
+public interface IProdRepo {
+
+}

@@ -1,0 +1,11 @@
+package com.sample.cart.CartRepository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.sample.cart.CartEntity.ProductsEntity;
+
+@Repository
+public interface IProdRepo extends JpaRepository<ProductsEntity, int>{
+
+}

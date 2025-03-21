@@ -1,0 +1,18 @@
+package com.sample.cart.CartRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.sample.cart.CartEntity.ProductsEntity;
+
+@Repository
+public interface IProdRepo extends JpaRepository<ProductsEntity, Integer>{
+	public Optional<ProductsEntity> findByCustId(long custId);
+	public Optional<ProductsEntity> findByProdId(long custId);
+	
+	
+
+}

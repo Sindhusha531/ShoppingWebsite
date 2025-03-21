@@ -1,0 +1,117 @@
+package com.sample.cart.Cartservice;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.sample.cart.CartDto.ProductsDto;
+import com.sample.cart.CartEntity.CartEntity;
+import com.sample.cart.CartEntity.ProductsEntity;
+import com.sample.cart.CartRepository.ICartRepo;
+import com.sample.cart.CartRepository.IProdRepo;
+
+@Service
+public class Cartservice {
+	@Autowired
+	private IProdRepo repo;
+	@Autowired
+	private ICartRepo cartRepo;
+
+	public ProductsDto save(ProductsDto prodDto) {
+		ProductsEntity productEntity=new ProductsEntity();
+		BeanUtils.copyProperties(prodDto, productEntity);
+		productEntity=repo.save(productEntity);
+		BeanUtils.copyProperties(productEntity, prodDto);
+		return prodDto;
+		
+	}
+
+	public ProductsDto saveToCart(ProductsDto prodDto) {
+		
+		CartEntity CartEntity=new CartEntity();
+		BeanUtils.copyProperties(prodDto, CartEntity);
+		CartEntity=cartRepo.save(CartEntity);
+		BeanUtils.copyProperties(CartEntity, prodDto);
+		return prodDto;
+		
+		
+	}
+
+	public void saveExcelData(MultipartFile file) throws IOException {
+        List<ProductsEntity> users = parseExcelFile(file);
+        repo.saveAll(users);
+
+		
+	}
+
+	private List<ProductsEntity> parseExcelFile(MultipartFile file) throws IOException {
+		List<ProductsEntity> products = new ArrayList<>();
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        for(Row row:sheet)
+        {
+        	if(row.getRowNum()==0)continue;
+        	ProductsEntity entity=new ProductsEntity();
+        	entity.setProdName(row.getCell(0).getStringCellValue());
+        	entity.setDescription(row.getCell(1).getStringCellValue());
+        	entity.setPrice((int)row.getCell(2).getNumericCellValue());
+        	entity.setQuantity((int)row.getCell(2).getNumericCellValue());
+        	products.add(entity);
+        }
+        workbook.close();
+		return products;
+	}
+
+	public ByteArrayInputStream exportDataToExcel() {
+		try {
+		List<ProductsEntity> prodList=repo.findAll();
+		Workbook workbook=new XSSFWorkbook();
+		Sheet sheet=workbook.createSheet("Products");
+		Row headerRow=sheet.createRow(0);
+		 String[] headers = {"ProdId", "prodName", "Description", "Price","Quantity"};
+		 for(int i=0;i<headers.length;i++)
+		 {
+			 Cell cell=headerRow.createCell(i);
+			 cell.setCellValue(headers[i]);
+		 }
+		int rowIndex=1;
+		for(ProductsEntity entity:prodList)
+		{
+			Row row = sheet.createRow(rowIndex++);
+            row.createCell(0).setCellValue(entity.getProdId());
+            row.createCell(1).setCellValue(entity.getProdName());
+            row.createCell(2).setCellValue(entity.getDescription());
+            row.createCell(3).setCellValue(entity.getPrice());
+            row.createCell(4).setCellValue(entity.getQuantity());
+		}
+		 ByteArrayOutputStream out = new ByteArrayOutputStream();
+	        
+				workbook.write(out);
+				workbook.close();
+				return new ByteArrayInputStream(out.toByteArray());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+
+	        
+	}
+
+	
+
+}

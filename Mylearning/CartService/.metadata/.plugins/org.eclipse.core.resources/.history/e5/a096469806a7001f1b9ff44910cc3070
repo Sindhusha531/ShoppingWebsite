@@ -1,0 +1,31 @@
+package com.sample.cart.Cartservice;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sample.cart.CartDto.ProductsDto;
+import com.sample.cart.CartEntity.ProductsEntity;
+import com.sample.cart.CartRepository.IProdRepo;
+
+@Service
+public class Cartservice {
+	@Autowired
+	private IProdRepo repo;
+
+	public ProductsDto save(ProductsDto prodDto) {
+		ProductsEntity productEntity=new ProductsEntity();
+		BeanUtils.copyProperties(prodDto, productEntity);
+		productEntity=repo.save(productEntity);
+		BeanUtils.copyProperties(productEntity, prodDto);
+		return prodDto;
+		
+	}
+
+	
+
+}

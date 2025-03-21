@@ -1,0 +1,161 @@
+package com.sample.cart.CartController;
+
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.sample.cart.CartDto.ProductsDto;
+import com.sample.cart.CartEntity.CartEntity;
+import com.sample.cart.CartEntity.ProductsEntity;
+import com.sample.cart.CartRepository.ICartRepo;
+import com.sample.cart.CartRepository.IProdRepo;
+import com.sample.cart.Cartservice.Cartservice;
+import com.sample.cart.exception.ProductNotFoundException;
+
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
+
+@RestController
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/Products")
+
+public class CartController {
+
+	@Autowired
+	private Cartservice service;
+	@Autowired
+	private IProdRepo repo;
+	@Autowired
+	private ICartRepo cartRepo;
+
+//	CustomerEntity customerEntity=repo.findByCustomerId(id);
+//	List<CustomerDto> CustomerDtoList = new ArrayList<>();
+//	ResponseEntity<OrdersDto[]> responseEntity= restTemplate.getForEntity
+//	("http://localhost:8081/orders/getOrdersByCustId/"+customerEntity.getCustomerId(), OrdersDto[].class);
+//	List<OrdersDto> dtoList=Arrays.asList(responseEntity.getBody());
+//	for(OrdersDto dto:dtoList)
+//	{
+//		CustomerDto custDto= new CustomerDto();
+//		BeanUtils.copyProperties(dto, custDto);
+//		custDto.setOrders(dto);
+//		CustomerDtoList.add(custDto);
+//	@ElementCollection(private List<ProductsDto> dtoitems=new ArrayList<>();)
+//	@Embeddable
+	@PostMapping("/save")
+	public ResponseEntity<ProductsDto> save(@RequestBody ProductsDto prodDto) {
+//		Optional<ProductsEntity> cart=repo.findByCustId(custId);
+//		ProductsEntity entity=cart.orElse(new ProductsEntity() );
+//		System.out.println("optional");
+//		entity.setCustId(custId);
+		// entity.getDtoitems().add(prodDto);
+		prodDto = service.save(prodDto);
+		return ResponseEntity.ok().body(prodDto);
+	}
+
+	@GetMapping("/getAllProd")
+	public ResponseEntity<List<ProductsEntity>> getAllProd() {
+
+		List<ProductsEntity> list = repo.findAll();
+		if (list.isEmpty()) {
+			throw new ProductNotFoundException("List is empty");
+		}
+		return ResponseEntity.ok().body(list);
+	}
+	@GetMapping("/getById/{id}")
+	public ResponseEntity<ProductsEntity> getProdbyId(@PathVariable long id) {
+
+		Optional<ProductsEntity> list = repo.findByProdId(id);
+		if (list.isEmpty()) {
+			throw new ProductNotFoundException("List is empty");
+		}
+		return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@GetMapping("/getByUser/{custId}")
+	public ResponseEntity<ProductsEntity> getProdbyuser(@PathVariable long custId) {
+
+		Optional<ProductsEntity> list = repo.findByCustId(custId);
+		if (list.isEmpty()) {
+			throw new ProductNotFoundException("List is empty");
+		}
+		return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	@GetMapping("/getByDesc/{desc}")
+	public ResponseEntity<List<ProductsEntity>> getProdByDesc(@PathVariable String desc){
+		List<ProductsEntity> list = repo.findByDescription(desc);
+		if (list.isEmpty()) {
+			throw new ProductNotFoundException("List is empty");
+		}
+		 return ResponseEntity.ok().body(list);
+			
+	}
+	
+	@PostMapping("/addtocart")
+	public ResponseEntity<ProductsDto> addToCart(@RequestBody ProductsDto prodDto) {
+		prodDto = service.saveToCart(prodDto);
+		return ResponseEntity.ok().body(prodDto);
+	}
+
+	@GetMapping("/getcartitems")
+	public ResponseEntity<List<CartEntity>> getcartitems() {
+
+		List<CartEntity> list = cartRepo.findAll();
+		if (list.isEmpty()) {
+			throw new ProductNotFoundException("List is empty");
+		}
+		return ResponseEntity.ok().body(list);
+	}
+	
+	@PostMapping("/upload")
+	public ResponseEntity<String> uploadExcel(@RequestParam("file")MultipartFile file)
+	{
+		try {
+		 service.saveExcelData(file);
+         return ResponseEntity.ok("Excel data has been successfully saved to the database.");
+		}
+		catch (Exception e) {
+            return ResponseEntity.status(500).body("An error occurred: " + e.getMessage());
+        }
+
+	}
+	@GetMapping("/generateExcel")
+	public ResponseEntity<InputStreamResource> generateExcel() {
+		ByteArrayInputStream excelData=service.exportDataToExcel();
+		  HttpHeaders headers = new HttpHeaders();
+		  headers.add("Content-Disposition", "attachment; filename=users.xlsx");
+		  return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM).body(new InputStreamResource(excelData));
+		
+	}
+	
+	/*
+	 * @GetMapping("/download-csv") public ResponseEntity<InputStreamResource>
+	 * downloadCsvFile() { InputStreamResource csvFile =
+	 * excelExportService.exportDataToCsv();
+	 * 
+	 * HttpHeaders headers = new HttpHeaders();
+	 * headers.add(HttpHeaders.CONTENT_DISPOSITION,
+	 * "attachment; filename=users.csv");
+	 * 
+	 * return ResponseEntity.ok() .headers(headers)
+	 * .contentType(MediaType.TEXT_PLAIN) .body(csvFile); }
+	 */
+	
+
+}

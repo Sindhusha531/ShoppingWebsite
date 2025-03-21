@@ -1,0 +1,5 @@
+package com.sample.cart.CartEntity;
+
+public class ProductsEntity {
+
+}

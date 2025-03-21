@@ -1,0 +1,94 @@
+package com.sample.cart.CartController;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sample.cart.CartDto.ProductsDto;
+import com.sample.cart.CartEntity.ProductsEntity;
+import com.sample.cart.CartRepository.IProdRepo;
+import com.sample.cart.Cartservice.Cartservice;
+import com.sample.cart.exception.ProductNotFoundException;
+
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
+
+@RestController
+@CrossOrigin(origins="http://localhost:4200")
+@RequestMapping("/Products")
+
+public class CartController {
+	
+	@Autowired
+	private Cartservice service;
+	@Autowired
+	private IProdRepo repo;
+	
+//	CustomerEntity customerEntity=repo.findByCustomerId(id);
+//	List<CustomerDto> CustomerDtoList = new ArrayList<>();
+//	ResponseEntity<OrdersDto[]> responseEntity= restTemplate.getForEntity
+//	("http://localhost:8081/orders/getOrdersByCustId/"+customerEntity.getCustomerId(), OrdersDto[].class);
+//	List<OrdersDto> dtoList=Arrays.asList(responseEntity.getBody());
+//	for(OrdersDto dto:dtoList)
+//	{
+//		CustomerDto custDto= new CustomerDto();
+//		BeanUtils.copyProperties(dto, custDto);
+//		custDto.setOrders(dto);
+//		CustomerDtoList.add(custDto);
+//	@ElementCollection(private List<ProductsDto> dtoitems=new ArrayList<>();)
+//	@Embeddable
+	@PostMapping("/save")
+	public ResponseEntity<ProductsDto> save
+	(@RequestBody ProductsDto prodDto )
+	{
+//		Optional<ProductsEntity> cart=repo.findByCustId(custId);
+//		ProductsEntity entity=cart.orElse(new ProductsEntity() );
+//		System.out.println("optional");
+//		entity.setCustId(custId);
+		//entity.getDtoitems().add(prodDto);
+		prodDto=service.save(prodDto);
+		return ResponseEntity.ok().body(prodDto);
+	}
+	@GetMapping("/getAllProd")
+	public ResponseEntity<List<ProductsEntity>> getAllProd()
+	{
+		
+	List<ProductsEntity> list=	repo.findAll();
+	if(list.isEmpty())
+	{
+		throw new ProductNotFoundException("List is empty");
+	}
+	return ResponseEntity.ok().body(list);
+	}
+	@GetMapping("/getByUser/{custId}")
+	public ResponseEntity<ProductsEntity> getProdbyuser(@PathVariable long custId )
+	{
+		
+	Optional<ProductsEntity> list=	repo.findByCustId(custId);
+	if(list.isEmpty())
+	{
+		throw new ProductNotFoundException("List is empty");
+	}
+	return list.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+	}
+	
+	@PostMapping("/addtocart")
+	public ResponseEntity<ProductsDto> addToCart
+	(@RequestBody ProductsDto prodDto )
+	{
+		prodDto=service.saveToCart(prodDto);
+		return ResponseEntity.ok().body(prodDto);
+	}
+
+}

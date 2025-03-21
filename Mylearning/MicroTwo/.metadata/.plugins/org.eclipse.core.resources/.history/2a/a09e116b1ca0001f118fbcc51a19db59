@@ -1,0 +1,10 @@
+package com.practice.microTwo.dto;
+
+public class OrdersDto {
+	private Long orderNo;
+	private String orderName;
+	private int quantity;
+	private String description;
+	
+	private Long customerId;
+}

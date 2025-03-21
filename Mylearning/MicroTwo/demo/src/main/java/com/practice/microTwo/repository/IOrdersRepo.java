@@ -1,0 +1,17 @@
+package com.practice.microTwo.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.practice.microTwo.entity.OrdersEntity;
+
+@Repository
+public interface IOrdersRepo extends JpaRepository<OrdersEntity, Long>{
+	public List<OrdersEntity> findOrdersBycustomerId(Long id);
+	@Query("select o from OrdersEntity o where o.quantity>100 and o.customerId=:customerId")
+	public List<OrdersEntity> getQuantitygreater(@Param("customerId") long customerId);
+}

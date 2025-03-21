@@ -1,0 +1,72 @@
+package com.practice.microTwo.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.practice.microTwo.dto.OrdersDto;
+import com.practice.microTwo.entity.OrdersEntity;
+import com.practice.microTwo.repository.IOrdersRepo;
+
+import ch.qos.logback.core.joran.util.beans.BeanUtil;
+
+@Service
+public class OrdersService {
+	@Autowired
+	private IOrdersRepo repo;
+
+	public List<OrdersDto> getOrders() {
+		List<OrdersEntity> entityList=repo.findAll();
+		List<OrdersDto> dtoList=new ArrayList<>();
+		for(OrdersEntity entity:entityList)
+		{
+			OrdersDto ordersDto=new OrdersDto();
+			BeanUtils.copyProperties(entity, ordersDto);
+			dtoList.add(ordersDto);
+		}
+		return dtoList;
+		
+	}
+
+	public OrdersDto saveOrderDetails(OrdersDto ordersdto) {
+		OrdersEntity ordersEntity=new OrdersEntity();
+		BeanUtils.copyProperties(ordersdto, ordersEntity);
+		ordersEntity=repo.save(ordersEntity);
+		BeanUtils.copyProperties(ordersEntity, ordersdto);
+		return ordersdto;
+		
+		
+		
+	}
+
+	public List<OrdersDto> getOrdersByCustId(Long id) {
+		List<OrdersEntity> entityList=repo.findOrdersBycustomerId(id);
+		List<OrdersDto> dtoList=new ArrayList<>();
+		for(OrdersEntity entity:entityList)
+		{
+			OrdersDto ordersDto=new OrdersDto();
+			BeanUtils.copyProperties(entity, ordersDto);
+			dtoList.add(ordersDto);
+		}
+		
+		return dtoList;
+		//return null;
+	}
+	public List<OrdersDto> getOrdersGreater()
+	{
+		List<OrdersEntity> entityList=repo.getQuantitygreater();
+		List<OrdersDto> ordersList=new ArrayList<>();
+		for(OrdersEntity entity:entityList)
+		{
+			OrdersDto ordersDto=new OrdersDto();
+			BeanUtils.copyProperties(entity, ordersDto);
+			ordersList.add(ordersDto);
+		}
+		return ordersList;
+		
+	}
+
+}

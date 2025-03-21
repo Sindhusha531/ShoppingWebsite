@@ -1,0 +1,5 @@
+package com.practice.microTwo.repository;
+
+public interface IOrdersRepo {
+
+}

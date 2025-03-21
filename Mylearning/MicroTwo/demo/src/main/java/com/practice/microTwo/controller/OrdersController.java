@@ -1,0 +1,49 @@
+package com.practice.microTwo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.practice.microTwo.dto.OrdersDto;
+import com.practice.microTwo.service.OrdersService;
+
+@RestController
+@RequestMapping("orders")
+public class OrdersController {
+	@Autowired
+	private OrdersService service;
+	
+	@GetMapping("/allOrders")
+	public ResponseEntity<List<OrdersDto>> getOrders()
+	{
+		List<OrdersDto> dtoList=service.getOrders();
+		return ResponseEntity.ok().body(dtoList);
+	}
+	@PostMapping("/save")
+	public ResponseEntity<OrdersDto> saveOrders(@RequestBody OrdersDto ordersdto)
+	
+	{
+		ordersdto=service.saveOrderDetails(ordersdto)	;
+		return ResponseEntity.ok().body(ordersdto);
+	}
+	@GetMapping("/getOrdersByCustId/{id}")
+	public ResponseEntity<List<OrdersDto>> getOrdersByCustId(@PathVariable Long id)
+	{
+		List<OrdersDto> dtoList=service.getOrdersByCustId(id);
+		return ResponseEntity.ok().body(dtoList);
+	}
+	@GetMapping("/orderByQuan/{id}")
+	public ResponseEntity<List<OrdersDto>> getOrdersByQuantity(@PathVariable long id)
+	{
+		List<OrdersDto> dtoList=service.getOrdersGreater(id);
+		return ResponseEntity.ok().body(dtoList);
+	}
+
+}

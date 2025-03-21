@@ -1,0 +1,62 @@
+package com.practice.firstMicro.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.practice.firstMicro.dto.CustomerDto;
+import com.practice.firstMicro.service.CustomerService;
+
+@RestController
+@RequestMapping("/customer")
+
+public class CustomerController {
+	@Autowired
+	private CustomerService service;
+	
+	@GetMapping("/allCustomers")
+	public ResponseEntity<List<CustomerDto>> getAllCustomers()
+	{
+		System.out.println("controller");
+		List<CustomerDto> custlist= service.getAllCustomers();
+		System.out.println(custlist);
+		return ResponseEntity.ok().body(custlist);
+	}
+	@GetMapping("/getCustById/{id}")
+	public ResponseEntity<CustomerDto> getCustById(@PathVariable Long id)
+	{
+		System.out.println("controller");
+		CustomerDto customerDto= service.getCustById();
+		System.out.println(customerDto);
+		return ResponseEntity.ok().body(customerDto);
+	}
+	@PostMapping("/save")
+	public ResponseEntity<CustomerDto> saveCustomers(@RequestBody CustomerDto customerDto)
+	{
+		System.out.println("controller");
+		customerDto= service.save(customerDto);
+		 System.out.println("save");
+		return ResponseEntity.ok().body(customerDto);
+	}
+	@GetMapping("/getOrders/{id}")
+	public ResponseEntity<List<CustomerDto>> getOrdersByCustomerId(@PathVariable Long id) {
+		System.out.println("Inside getOrdersByCustomerId");
+		List<CustomerDto> customerDto = service.getOrdersByCustomerId(id);
+		return ResponseEntity.ok().body(customerDto);
+	}
+	@GetMapping("/getCartItems/{id}")
+	public ResponseEntity<List<CustomerDto>> getCartItemsByCustomerId(@PathVariable Long id) {
+		System.out.println("Inside getOrdersByCustomerId");
+		List<CustomerDto> customerDto = service.getCartItemsforCustId(id);
+		return ResponseEntity.ok().body(customerDto);
+	}
+	
+
+}

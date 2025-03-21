@@ -1,0 +1,88 @@
+package com.practice.firstMicro.service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.practice.firstMicro.dto.CustomerDto;
+import com.practice.firstMicro.dto.OrdersDto;
+import com.practice.firstMicro.dto.ProductsDto;
+import com.practice.firstMicro.entity.CustomerEntity;
+import com.practice.firstMicro.repository.ICustomerRepository;
+
+@Service
+public class CustomerService {
+	@Autowired
+	private ICustomerRepository repo;
+	@Autowired
+	private RestTemplate restTemplate;
+
+	public List<CustomerDto> getAllCustomers() {
+		List<CustomerEntity> custlist =repo.findAll();
+		List<CustomerDto> dtoList=new ArrayList<>();
+		for(CustomerEntity entity:custlist)
+		{
+			CustomerDto customerDto	=new CustomerDto();
+			BeanUtils.copyProperties(entity, customerDto);
+			dtoList.add(customerDto);
+			System.out.println(dtoList);
+		}
+		return dtoList;
+		}
+	public CustomerDto getCustById(Long id) {
+		CustomerEntity customerEntity =repo.findByCustomerId(id);
+		CustomerDto customerDto	=new CustomerDto();
+		BeanUtils.copyProperties(customerDto, customerEntity);
+		return customerDto;
+		}
+
+	
+	public CustomerDto save(CustomerDto customerDto) {
+		CustomerEntity customerEntity=new CustomerEntity();
+		BeanUtils.copyProperties(customerDto, customerEntity);
+		customerEntity=repo.save(customerEntity);
+		BeanUtils.copyProperties(customerEntity, customerDto);
+		return customerDto;
+		
+	}
+
+
+	public List<CustomerDto> getOrdersByCustomerId(Long id) {
+		System.out.println("Inside getOrdersByCustomerId");
+		CustomerEntity customerEntity=repo.findByCustomerId(id);
+		List<CustomerDto> CustomerDtoList = new ArrayList<>();
+		ResponseEntity<OrdersDto[]> responseEntity= restTemplate.getForEntity
+		("http://localhost:8081/orders/getOrdersByCustId/"+customerEntity.getCustomerId(), OrdersDto[].class);
+		List<OrdersDto> dtoList=Arrays.asList(responseEntity.getBody());
+		for(OrdersDto dto:dtoList)
+		{
+			CustomerDto custDto= new CustomerDto();
+			BeanUtils.copyProperties(dto, custDto);
+			custDto.setOrders(dto);
+			CustomerDtoList.add(custDto);
+		}
+		return CustomerDtoList;
+	}
+	public List<CustomerDto> getCartItemsforCustId(Long id)
+	{
+		CustomerEntity customerEntity=repo.findByCustomerId(id);
+		List<CustomerDto> CustomerDtoList = new ArrayList<>();
+		ResponseEntity<ProductsDto[]> responseEntity= restTemplate.getForEntity("http://localhost:8083/Products/getByUser/"+customerEntity.getCustomerId(), ProductsDto[].class);
+	List<ProductsDto> prodList=Arrays.asList(responseEntity.getBody());
+	for( ProductsDto pdodDto:prodList)
+	{
+		CustomerDto customerDto=new CustomerDto();
+		BeanUtils.copyProperties(pdodDto, customerDto);
+		CustomerDtoList.add(customerDto);
+	}
+	return CustomerDtoList;
+	}
+
+	
+}

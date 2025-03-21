@@ -1,0 +1,71 @@
+<div>
+    <div class="sort-dropdown" style="margin-left: 900px;">
+        <label for="sortBy">Sort By:</label>
+        <select id="sortBy" #sortSelect (change)="sortProducts(sortSelect.value)">
+            <option value="name">Name</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+          </select>
+      </div>
+
+      <div class="container">
+        <div class="filters">
+            <h3>Filters</h3>
+            <div>
+              <h4>Brand</h4>
+              <ul>
+                <li *ngFor="let brand of brands">
+                    <input type="checkbox"  [value]="brand"   (change)="filterProducts($event,'brand')"     />
+                    {{ brand }}
+                  </li>
+                </ul>
+            </div>
+            <h3>Filter by Price</h3>
+            <div>
+              <label for="priceRange">Max Price: {{ maxPrice }}</label>
+              <input
+                type="range"
+                id="priceRange"
+                min="300"
+                max="28000"
+                [value]="maxPrice"
+                (input)="filterByPrice($event)"
+              />
+            </div>
+            <div>
+                <h4>Colour</h4>
+                <ul>
+                    <li *ngFor="let colour of colours">
+                        <input type="checkbox"  [value]="colour"   (change)="filterProducts($event,'color')"     />
+                        {{ colour }}
+                      </li>
+                    <!-- <li><input type="checkbox" >Black</li>
+                    <li><input type="checkbox">Blue</li>
+                    <li><input type="checkbox">Red</li>
+                    <li><input type="checkbox">Grey</li> -->
+                </ul>
+            </div>
+            <!-- Add more filters -->
+          </div>
+          <div class="product-list">
+            <div  *ngFor="let product of filteredProducts"
+                (click)="viewProductDetails(product.prodId)">
+                <img [src]="product.image" class="image"
+                     /><div style="text-align: center;">
+                    <p>Product Name: {{product.prodName}}</p>
+                <p>Price: {{product.price}}</p>
+            </div>
+            </div>
+        </div>
+      </div>
+           
+
+        <!-- <select id="selectdropdown" [(ngModel)]="selectedProductId" (change)="onProductChange()"
+        class="form-select">
+        <option value="">Select Product</option>
+        <option *ngFor="let product of products" [value]="product.prodId">
+            {{product.prodName}}
+        </option>
+    </select> -->
+    
+</div>

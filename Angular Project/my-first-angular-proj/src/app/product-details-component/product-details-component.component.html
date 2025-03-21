@@ -1,0 +1,47 @@
+<div *ngIf="product">
+    <div class="prod-head">
+        <h4>Prod Details</h4>
+    </div>
+    <tr>
+    <td>
+        <p class="image"> <img [src]="product.image" alt="{{ product.prodName }}"
+                style="max-width: 300px; height: auto; border: 1px solid #ddd; border-radius: 5px;" />
+        </p>
+    </td>
+</tr>
+<tr>
+    <div style="margin-left: 350px;margin-top: 5px;">
+        <td class="prod-details" ><br/>
+            <p>Product Name: {{product.prodName}}</p><br/>
+            <p>Price: {{product.price}}</p><br/>
+            <p>Description: {{product.description}}</p><br/>
+            <tr>
+                <td>
+                    <p>Quantity:
+                        <select [(ngModel)]="selectedQuantity" (change)="onQuantityChange()">
+                            <option *ngFor="let number of numbers">
+                                {{number}}
+                            </option>
+                        </select>
+                    </p>
+                </td>
+                <td>
+                    <div *ngIf="selectedQuantity === '10+'">
+                        <input type="number" [(ngModel)]="customQuantity" placeholder="Enter more than 10" />
+                    </div>
+                </td>
+            </tr>
+
+            <br>
+        </td>
+    </div>
+</tr>
+    <tr >
+
+        <td><button (click)="addToCart()" style="margin-left: 350px;height: 50px;width: 100px;">Add to cart</button></td>
+    </tr>
+</div>
+
+<div *ngIf="!product">
+    <p>Product not found!</p>
+</div>

@@ -1,0 +1,29 @@
+
+<div *ngFor="let product of cartProducts" (click)="viewProductDetails(product.prodId)" class="product-container">
+    <div class="delete-icon" (click)="deleteProduct(product.prodId)">
+        <img src="assets/icon/delete-icon.png" alt="Delete" style="width: 20px; cursor: pointer;" />
+    </div>
+<table>
+    <tr>
+        <td>
+            <p class="image"> <img [src]="product.image" alt="{{ product.prodName }}"
+                    style="max-width: 300px; height: auto; border: 1px solid #ddd; border-radius: 5px;max-height: 300px;" />
+            </p>
+        </td>
+    </tr>
+    <tr style="margin-top: 20px;">
+        <div style="margin-left: 350px;margin-top: 5px;margin-bottom: 30px;">
+            <td class="prod-details"><br />
+                <p>Product Name: {{product.prodName}}</p><br />
+                <p>Price: {{product.price}}</p><br />
+                <p>Description: {{product.description}}</p><br />
+                <p>Description: {{product.quantity}}</p><br />
+                <br>
+            </td>
+        </div>
+    </tr>
+</table>
+</div>
+<div style="margin-top:200px">
+<button (click)="placeOrder()" style="margin-left: 350px;height: 50px;width: 100px;">Place Order</button>
+</div>

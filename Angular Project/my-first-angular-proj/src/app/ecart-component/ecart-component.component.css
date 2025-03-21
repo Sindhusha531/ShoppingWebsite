@@ -1,0 +1,190 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f8f9fa;
+    color:#333;
+}
+.ecart{
+  color: white;
+  background-color: #333;
+  height: 10px;
+}
+.search-container {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+ 
+}
+.search-bar {
+  width: 200%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ccc;
+
+}
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two equal-width columns */
+  gap: 10px; /* Space between the items */
+}
+
+.product-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 600px;
+  border-radius: 2px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  text-align: center; /* Center align content */
+}
+
+.product-item:hover {
+  background-color: #e6e6e6;
+}
+.container {
+  display: flex;
+  height: 100vh;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+/* Vertical Navigation Styling */
+.vertical-nav {
+  flex: 0 0 200px; /* Fixed width */
+  background-color: #f4f4f4; /* Light grey background */
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  height: 100%;
+}
+
+.vertical-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vertical-nav li {
+  margin-bottom: 15px;
+}
+
+.vertical-nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.vertical-nav a:hover {
+  color: #007bff;
+}
+
+
+
+.active {
+  background-color: #007bff; /* Highlight active link */
+  color: white;
+}
+.navbar{
+    background-color: darkblue;
+    color: black;
+    padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.navbar a{
+color:white;
+margin: 0px 10px;
+font-weight: bold;  
+}
+.navbar a:hover {
+    text-decoration: underline;
+  }
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 2 cards per row */
+    gap: 20px; /* Spacing between cards */
+    width: 200%;
+  }
+  
+  /* Card Styling */
+  .card {
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card_items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .card_items img {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .card_items h3 {
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .card_items p {
+    font-size: 14px;
+    color: #555;
+    margin: 0 0 10px;
+  }
+  
+  .card_items button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .card_items button:hover {
+    background-color: #0056b3;
+  }
+  
+  
+  
+  .text-center{
+text-align: center;
+  }
+  
+  .card-items img:hover {
+    transform: scale(1.05);
+  }
+  ::ng-deep .mattooltip {
+    --mdc-plain-tooltip-container-color:white !important;
+    --mdc-plain-tooltip-supporting-text-color:black !important;
+  }
+  ::ng-deep .custom-tooltip {
+    --mdc-plain-tooltip-container-color:white !important;
+    --mdc-plain-tooltip-supporting-text-color:yellow !important;
+    background-color: white !important;  /* Set background to white */
+    color: green !important;             /* Set text color to green */
+    font-size: 14px;                     /* Optional: Adjust font size */
+    padding: 8px;                        /* Optional: Adjust padding */
+    border-radius: 4px;                  /* Optional: Rounded corners */
+    border: 1px solid #28a745;           /* Optional: Green border */
+  }

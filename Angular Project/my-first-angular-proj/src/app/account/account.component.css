@@ -1,0 +1,37 @@
+.account-details-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .account-card {
+    padding: 20px;
+  }
+  
+  .account-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  span {
+    font-size: 16px;
+    color: #777;
+  }
+  

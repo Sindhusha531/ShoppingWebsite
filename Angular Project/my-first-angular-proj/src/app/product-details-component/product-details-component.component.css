@@ -1,0 +1,15 @@
+.image{
+    width:400px;
+    height: 20px;
+    
+}
+.prod-head{
+    font-size: xx-large;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.prod-details{
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 0px;
+    text-align: left;
+}
